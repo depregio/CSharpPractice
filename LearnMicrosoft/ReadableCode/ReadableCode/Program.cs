@@ -1,4 +1,22 @@
-﻿//Code comments should be used to say what the code cannot
+﻿//Variable name RULES
+    //Can contain alphanumeric characters and _
+    //Special characters like the pound #, the dash -, and the dollar sign $ are not allowed.
+    //Variable names must begin with an alphabetical letter or an underscore, not a number.
+    //Using an underscore character to start a variable name is typically reserved for private instance fields
+    //Variable names must NOT be a C# keyword (int int, string string...)
+    //Variable names are case-sensitive
+
+//Variable name CONVENTIONS
+    //Use camel case (thisIsCamelCase)
+    //Be descriptive and meaningful in your application. (bool orderComplete, NOT bool isComplete)
+    //Be one or more entire words appended together. Don't use contractions (decimal orderAmount, NOT decimal odrAmt)
+    //Shouldn't include the data type of the variable, this was used years ago, called hungarian notation (string strMyValue)
+
+//The rules and conventions described above are for LOCAL variables.
+
+
+
+//Code comments should be used to say what the code cannot
 //It's best to use comments for higher-level ideas and not to add comments about how an individual line of code works.
 
 string firstName = "Bob";
