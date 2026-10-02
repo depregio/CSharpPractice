@@ -1,4 +1,4 @@
-﻿// #1 the ourAnimals array will store the following: 
+﻿// the ourAnimals array will store the following: 
 string animalSpecies = "";
 string animalID = "";
 string animalAge = "";
@@ -7,16 +7,16 @@ string animalPersonalityDescription = "";
 string animalNickname = "";
 string suggestedDonation = "";
 
-// #2 variables that support data entry
+// variables that support data entry
 int maxPets = 8;
 string? readResult;
 string menuSelection = "";
 decimal decimalDonation = 0.00m;
 
-// #3 array used to store runtime data, there is no persisted data
+// array used to store runtime data, there is no persisted data
 string[,] ourAnimals = new string[maxPets, 7];  //Two dimensions array, an array of arrays. First value is number of arrays, second is size of each array.
 
-// #4 create sample data ourAnimals array entries
+// create sample data ourAnimals array entries
 for (int i = 0; i < maxPets; i++)
 {
     switch (i)
@@ -87,7 +87,7 @@ for (int i = 0; i < maxPets; i++)
     ourAnimals[i, 6] = $"Suggested Donation: {decimalDonation:C2}";
 }
 
-// #5 display the top-level menu options
+// display the top-level menu options
 do
 {
     // NOTE: the Console.Clear method is throwing an exception in debug sessions
@@ -127,46 +127,82 @@ do
             break;
 
         case "2":
+            // #1 Display all dogs with a multiple search characteristics
             // Display all dogs with a specified characteristic
-            string dogCharacteristic = "";
+            string[] dogCharacteristics = {""};
 
-            while (dogCharacteristic == "")
+            while (dogCharacteristics[0] == "")
             {
+                // #2 have user enter multiple comma separated characteristics to search for
                 // have the user enter physical characteristics to search for
-                Console.WriteLine($"\nEnter one desired dog characteristics to search for");
+                Console.WriteLine($"\nEnter dog characteristics to search for separated by commas");
                 readResult = Console.ReadLine();
                 if (readResult != null)
                 {
-                    dogCharacteristic = readResult.ToLower().Trim();
+                    dogCharacteristics = readResult.ToLower().Replace(" ","").Split(",");    //Trim() only removes blank spaces at start and end.
+                    dogCharacteristics.Sort();
+                    Console.WriteLine();
                 }
             }
 
             string dogDescription = "";
             bool noMatchesDog = true;
 
-            // #6 loop through the ourAnimals array to search for matching animals
+            // #4 update to "rotating" animation with countdown
+            string[] searchingIcons = { "| ", "/ ", "--","\\ ","* " };
+
+            // loop through the ourAnimals array to search for matching animals
             for (int i = 0; i < maxPets; i++)
             {
                 if (ourAnimals[i, 1].Contains("dog"))
                 {
-                    // #7 Search combined descriptions and report results
-                    dogDescription = ourAnimals[i, 4] + "\n" + ourAnimals[i, 5];
-                    if (dogDescription.Contains(dogCharacteristic))
-                    {
-                        Console.WriteLine($"\nOur dog {ourAnimals[i, 3].Replace("Nickname: ","")} is a match!");    //Just print the dog's name
-                        Console.WriteLine(dogDescription);
+                    bool ThisDogMatch = false; //Need this to print dog description once. If I rely on noMatchesDog it could create some false positives.
 
-                        noMatchesDog = false;
+                    // #3a iterate submitted characteristic terms and search description for each term
+                    foreach (string characteristic in dogCharacteristics)
+                    {
+                        // search combined descriptions and report results
+                        dogDescription = ourAnimals[i, 4] + "\n" + ourAnimals[i, 5];
+
+                        for (int j = 2; j > -1; j--)
+                        {
+                            // #5 update "searching" message to show countdown 
+                            foreach (string icon in searchingIcons)
+                            {
+                                Console.Write($"\rsearching our dog {ourAnimals[i, 3].Replace("Nickname: ", "")} for {characteristic} {icon}{j}");
+                                Thread.Sleep(250);
+                            }
+
+                            Console.Write($"\r{new String(' ', Console.BufferWidth)}");
+                        }
+
+                        if (dogDescription.Contains(characteristic))
+                        {
+                            // #3b update message to reflect term 
+                            // #3c set a flag "this dog" is a match
+                            Console.WriteLine($"\rOur dog {ourAnimals[i, 3].Replace("Nickname: ", "")} matches your search for {characteristic}");    //Just print the dog's name.
+                            noMatchesDog = false;
+                            ThisDogMatch = true;
+                        }
+                    }
+                    
+                    // #3d if "this dog" is match write match message + dog description
+                    if (ThisDogMatch)
+                    {
+                        Console.Write("\r" + ourAnimals[i, 3] + " (" + ourAnimals[i, 0] + ")\n");
+                        Console.WriteLine(ourAnimals[i, 4]);
+                        Console.WriteLine(ourAnimals[i, 5]);
+                        Console.WriteLine();
                     }
                 }
             }
 
             if (noMatchesDog)
             {
-                Console.WriteLine("None of our dogs are a match found for: " + dogCharacteristic);
+                Console.WriteLine("None of our dogs are a match found for: " + String.Join(", ",dogCharacteristics));
             }
 
-            Console.WriteLine("Press the Enter key to continue.");
+            Console.WriteLine("\nPress the Enter key to continue.");
             readResult = Console.ReadLine();
             break;
 
