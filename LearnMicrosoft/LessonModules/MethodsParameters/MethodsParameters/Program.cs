@@ -81,7 +81,7 @@ void PrintCircleCircumference(int radius)
     Console.WriteLine($"Circumference = {circumference}");
 }
 
-//Since the variable both pi are set to the same fixed value and used in both methods, this value is a good candidate for a global variable.
+//Since both pi are set to the same fixed value and used in both methods, this is a good candidate for a global variable.
 //The same can't be said for radius. It isn't a global variable, you can call the methods with different values without updating the variable each time.
 double pi = 3.14159;        //Note how this pi doesn't enter in conflict with the others variable with the same name but different scope.
 PrintCircleArea2(12);
@@ -273,6 +273,7 @@ for (int i = 0; i < external.GetLength(0); i++)
     // display external email addresses
     PrintEmailAddress(firstName: external[i, 0], lastName: external[i, 1], externalDomain);
 }
+
 void PrintEmailAddress(string firstName, string lastName, string domain = "contoso.com")
 {
     string email = (firstName.Remove(2) + lastName).ToLower();          //Use .Remove(2) or .Substring(0, 2)
