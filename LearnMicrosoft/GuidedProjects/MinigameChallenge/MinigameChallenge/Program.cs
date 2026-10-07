@@ -60,27 +60,51 @@ while (!shouldExit)
     }
     else
     {
-        Move(exitOnOtherKey: true);
-
+        if (!CheckPlayerSpeedIncrease())
+        {
+            Move(exitOnOtherKey: true);
+        }
+        else
+        {
+            Move(exitOnOtherKey: true, speed: 3);
+        }
         if(FoodConsumed())
         {
             ClearFood();
-            ShowFood();
             ChangePlayer();
+            ShowFood();
+            
+            if(CheckPlayerFreeze())
+            {
+                FreezePlayer();
+            }
         }
 
     }
 }
 
 
-//
-bool FoodConsumed ()    //return playerX==foodX && playerY==foodY; considers only if player eats the first food character
+//Checks whether the player should be frozen
+bool CheckPlayerFreeze()
+{
+    return player.Substring(1,1) == "X";
+}
+
+//Checks whether the player should have its speed changed
+bool CheckPlayerSpeedIncrease()
+{
+    return player.Substring(1, 1) == "^";
+}
+
+//Checks if any character of the food string overlaps the any character of the player string
+bool FoodConsumed ()    //return playerX==foodX && playerY==foodY; considers only if the player eats the first food char with its first char.
 {
     return 
         playerY == foodY
         && playerX < foodX + foods[food].Length
         && foodX < playerX + player.Length;
 }
+
 // Returns true if the Terminal was resized 
 bool TerminalResized()
 {
@@ -111,6 +135,7 @@ void ClearFood()                    //Needed because partial overlap can leave o
         Console.Write(" ");         //Mind you this also deletes player character since they overlap position. Redraw the player afterward.
     }
 }
+
 // Changes the player to match the food consumed
 void ChangePlayer()
 {
@@ -127,34 +152,36 @@ void FreezePlayer()
 }
 
 // Reads directional input from the Console and moves the player
-void Move(bool exitOnOtherKey = false)  //For bool variable names you can use is, has, can, should, on.
+void Move(bool exitOnOtherKey = false, int speed = 1)  //For bool variable names you can use is, has, can, should, on.
 {                                             //The official solution doesn't make sense here. It's wrong.
     int lastX = playerX;
     int lastY = playerY;
 
     switch (Console.ReadKey(true).Key)      //This is where the game waits.
     {
-        case ConsoleKey.UpArrow:
-            playerY--;
+        case ConsoleKey.UpArrow:            //Speed = how many units the player moves with each button press.
+            playerY -= 1;
             break;
         case ConsoleKey.DownArrow:
-            playerY++;
+            playerY += 1;
             break;
         case ConsoleKey.LeftArrow:
-            playerX--;
+            playerX -= speed;
             break;
         case ConsoleKey.RightArrow:
-            playerX++;
+            playerX += speed;
             break;
         case ConsoleKey.Escape:
             shouldExit = true;
             Console.Clear();
+            Console.WriteLine("Escape key pressed. Program exiting.");
             return;              //Doesn't return anything, exits the method in advance to terminate game.
         default:                
             if (exitOnOtherKey)  //If any other key is pressed while requested to check, exit game.
             {
                 shouldExit = true;
                 Console.Clear();
+                Console.WriteLine("Non-directional key pressed. Program exiting.");
                 return;         
             }
             break;
