@@ -46,7 +46,7 @@ Console.WriteLine($"Expected till value: {registerCheckTillTotal}\n\r");
 
 var valueGenerator = new Random((int)DateTime.Now.Ticks);
 
-int transactions = 40;
+int transactions = 100;
 
 if (useTestData)
 {
@@ -115,11 +115,7 @@ static void LoadTillEachMorning(int[,] registerDailyStartingCash, int[] cashTill
 
 static void MakeChange(int cost, int[] cashTill, int twenties, int tens = 0, int fives = 0, int ones = 0)
 {
-
-    cashTill[3] += twenties;
-    cashTill[2] += tens;
-    cashTill[1] += fives;
-    cashTill[0] += ones;
+    int[] changeMoney = [0,0,0,0];
 
     int amountPaid = twenties * 20 + tens * 10 + fives * 5 + ones;
     int changeNeeded = amountPaid - cost;
@@ -127,11 +123,17 @@ static void MakeChange(int cost, int[] cashTill, int twenties, int tens = 0, int
     if (changeNeeded < 0)
         throw new InvalidOperationException("InvalidOperationException: Not enough money provided to complete the transaction.");
 
+    cashTill[3] += twenties;
+    cashTill[2] += tens;
+    cashTill[1] += fives;
+    cashTill[0] += ones;
+
     Console.WriteLine("Cashier Returns:");
 
     while ((changeNeeded > 19) && (cashTill[3] > 0))
     {
         cashTill[3]--;
+        changeMoney[3]++;
         changeNeeded -= 20;
         Console.WriteLine("\t A twenty");
     }
@@ -139,6 +141,7 @@ static void MakeChange(int cost, int[] cashTill, int twenties, int tens = 0, int
     while ((changeNeeded > 9) && (cashTill[2] > 0))
     {
         cashTill[2]--;
+        changeMoney[2]++;
         changeNeeded -= 10;
         Console.WriteLine("\t A ten");
     }
@@ -146,6 +149,7 @@ static void MakeChange(int cost, int[] cashTill, int twenties, int tens = 0, int
     while ((changeNeeded > 4) && (cashTill[1] > 0))
     {
         cashTill[1]--;
+        changeMoney[1]++;
         changeNeeded -= 5;
         Console.WriteLine("\t A five");
     }
@@ -153,13 +157,30 @@ static void MakeChange(int cost, int[] cashTill, int twenties, int tens = 0, int
     while ((changeNeeded > 0) && (cashTill[0] > 0))
     {
         cashTill[0]--;
+        changeMoney[0]++;
         changeNeeded--;
         Console.WriteLine("\t A one");
     }
 
     if (changeNeeded > 0)
-        throw new InvalidOperationException("InvalidOperationException: The till is unable to make the correct change.");
+    {
+        cashTill[3] -= twenties;
+        cashTill[2] -= tens;
+        cashTill[1] -= fives;
+        cashTill[0] -= ones;
 
+        cashTill[3] += changeMoney[3];
+        cashTill[2] += changeMoney[2];
+        cashTill[1] += changeMoney[1];
+        cashTill[0] += changeMoney[0];
+
+        throw new InvalidOperationException("InvalidOperationException: The till is unable to make change for the cash provided.");
+    }
+    /*
+        Principle:  When an operation can fail partway through, it’s usually safer to compute the result 
+                    on local variables and only write it to shared state once you know it succeeded. 
+                    Some people call this a “commit at the end” or strong exception guarantee.
+    */
 }
 
 static void LogTillStatus(int[] cashTill)
