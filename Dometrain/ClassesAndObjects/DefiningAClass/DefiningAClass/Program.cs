@@ -51,10 +51,12 @@ class Program   //This requires to not have any top-level statement outside the 
 
 
 //Test: define an empty Person class, then create and return an instance of it.
+static Person CreatePerson()
+{
+    return new Person();
+}
+
 public class Person
 {
-    public static Person CreatePerson()
-    {
-        return new Person();
-    }
+    
 }
