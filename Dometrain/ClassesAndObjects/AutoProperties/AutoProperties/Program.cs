@@ -5,18 +5,16 @@
 
 
 //Basic syntax
-// Traditional approach with backing field
 public class Product
 {
     private string _name;
-    public string Name
+    public string Name                  //Traditional approach with backing field.
     {
         get { return _name; }
         set { _name = value; }
     }
 
-    private decimal _price;
-    public decimal Price { get; set; }
+    public decimal Price { get; set; }  //Approach with auto-properties. The compiler creates a hidden private field for you.
 }
 
 
@@ -41,13 +39,8 @@ public class Person
 //          Solution.GetPersonInfo already accesses the properties directly (person.Name), so it will not compile until your properties exist. Getting it to compile is the point.
 public class PersonSolution
 {
-    private string _name;
     public string Name { get; set; }
-    
-    private int _age;
     public int Age { get; set; }
-
-    private string _email;
     public string Email { get; set; }
 
     public PersonSolution(string name, int age, string email)
