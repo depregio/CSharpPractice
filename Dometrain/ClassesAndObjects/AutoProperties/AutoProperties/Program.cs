@@ -21,13 +21,10 @@ public class Product
 //Different access levels
 public class Person
 {
-    private string _name;
     public string Name { get; set; }        //Read-write property
 
-    private int _age;
     public int Age { get; private set; }    //Read-only from outside, settable from inside the class
 
-    private string _id;
     public string Id { get; }               //Read-only (must be set in constructor)
 }
 
