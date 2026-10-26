@@ -21,14 +21,11 @@ public class Example
 
 
 //Common uses of this
-// 1. Distinguishing fields from parameters
-this.name = name;
+this.name = name;                           //Distinguishing fields from parameters
 
-// 2. Passing the current instance to another method
-SomeMethod(this);
+SomeMethod(this);                           //Passing the current instance to another method
 
-// 3. Calling another constructor (constructor chaining)
-public Person() : this("Unknown", 0) { }
+public Person() : this("Unknown", 0) { }    //Calling another constructor (constructor chaining)
 
 
 
