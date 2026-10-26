@@ -8,8 +8,6 @@
 
 
 //Public members are accessed using dot notation from any part of your code
-using System.Xml.Linq;
-
 Car myCar = new Car();
 
 myCar.Brand = "Toyota";         //Setting a public field
