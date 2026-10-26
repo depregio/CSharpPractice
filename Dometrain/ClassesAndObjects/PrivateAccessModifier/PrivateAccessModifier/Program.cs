@@ -4,8 +4,6 @@
 //This is fundamental to encapsulation - hiding internal data and exposing controlled access through public methods.
 
 //Example
-using System.Data.SqlTypes;
-
 Counter c = new Counter();
 
 //c.count = 100;            //Error: 'count' is private
